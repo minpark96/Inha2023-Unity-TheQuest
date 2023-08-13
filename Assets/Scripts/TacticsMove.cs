@@ -22,6 +22,11 @@ public class TacticsMove : MonoBehaviour
     Vector3 heading = new Vector3();
 
     float halfHeight = 0;
+
+    bool fallingDown = false;
+    bool jumpingUp = false;
+    bool movingEdge = false;
+
     protected void Init()
     {
         tiles = GameObject.FindGameObjectsWithTag("Tile");
@@ -111,13 +116,107 @@ public class TacticsMove : MonoBehaviour
     {
         if (path.Count > 0)
         {
-            
+            Tile t = path.Peek();
+            Vector3 target = t.transform.position;
+
+            // Calculate the unit's position on top of the target tile
+            target.y += halfHeight + t.GetComponent<Collider>().bounds.extents.y;
+
+            if (Vector3.Distance(transform.position, target) >= 0.05f)
+            {
+                bool jump = transform.position.y != target.y;
+
+                if(jump)
+                {
+                    Jump(target);
+                }
+                else
+                {
+                    CalculateHeading(target);
+                    SetHorizontalVelocity();
+                }
+
+                // Locomotion
+                transform.forward = heading;
+                transform.position += velocity * Time.deltaTime;
+            }
+            else
+            {
+                // Tile center reached
+                transform.position = target;
+                path.Pop();
+            }
         }
         else
         {
+            RemoveSelectableTiles();
             moving = false;
         }
     }
 
+    protected void RemoveSelectableTiles()
+    {
+        if (currentTile != null)
+        {
+            currentTile.current = false;
+            currentTile = null;
+        }
+        foreach (Tile tile in selectableTiles)
+        {
+            tile.Reset();
+        }
 
+        selectableTiles.Clear();
+    }
+
+    void CalculateHeading(Vector3 target)
+    {
+        heading = target - transform.position;
+        heading.Normalize();
+    }
+
+    void SetHorizontalVelocity()
+    {
+        velocity = heading * moveSpeed;
+    }
+
+    void Jump(Vector3 target)
+    {
+        if(fallingDown)
+        {
+            FallDownward(target);
+        }
+        else if(jumpingUp)
+        {
+            JumpUpward(target);
+        }
+        else if(movingEdge)
+        {
+            MoveToEdge();
+        }
+        else
+        {
+            PrepareJump(target);
+        }
+    }
+
+    void PrepareJump(Vector3 target)
+    {
+
+    }
+
+    void FallDownward(Vector3 target)
+    {
+
+    }
+
+    void JumpUpward(Vector3 target)
+    {
+
+    }
+
+    void MoveToEdge()
+    {
+
+    }
 }

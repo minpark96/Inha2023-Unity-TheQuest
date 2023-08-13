@@ -39,9 +39,7 @@ public class PlayerMove : TacticsMove
 
                     if (t.selectable)
                     {
-                        //todo: move target
-                        t.target = true;
-                        moving = true;
+                        MoveToTile(t);
                     }
                 }
             }
