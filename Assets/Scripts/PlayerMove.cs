@@ -15,7 +15,12 @@ public class PlayerMove : TacticsMove
     {
         Debug.DrawRay(transform.position, transform.forward);
 
-        if(!moving)
+        if (!turn)
+        {
+            return;
+        }
+
+        if (!moving)
         {
             FindSelectableTiles();
             CheckMouse();
@@ -28,13 +33,13 @@ public class PlayerMove : TacticsMove
 
     void CheckMouse()
     {
-        if(Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit)) 
-            { 
+            if (Physics.Raycast(ray, out hit))
+            {
                 if (hit.collider.tag == "Tile")
                 {
                     Tile t = hit.collider.GetComponent<Tile>();

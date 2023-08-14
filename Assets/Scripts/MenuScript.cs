@@ -11,7 +11,7 @@ public class MenuScript
         GameObject[] tiles = GameObject.FindGameObjectsWithTag("Tile");
         Material material = Resources.Load<Material>("Tile");
 
-        foreach(GameObject t in tiles)
+        foreach (GameObject t in tiles)
         {
             t.GetComponent<Renderer>().material = material;
         }
